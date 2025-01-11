@@ -1,0 +1,2 @@
+# fuzzynixos
+Just my config :)
