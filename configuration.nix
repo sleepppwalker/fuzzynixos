@@ -16,6 +16,7 @@
   # Kernel Parameters
   boot.kernelParams = [
     "nouveau.config=NvGspRm=1"
+    "fbdev=1"
     "module_blacklist=amdgpu"
     "i915.enable_psr=0"
     "i915.enable_guc=2"
@@ -44,9 +45,9 @@
     "brcmsmac"
     "b43"
     "floppy"
+    "fuse"
     "nfs"
     "snd_hda_codec_hdmi"
-    "fuse"
     "ipv6"
     "nfsd"
     "raid1"
@@ -70,19 +71,11 @@
 
   # Kernel sysctl
   boot.kernel.sysctl = {
-    "kernel.sched_cfs_bandwidth_slice_us" = 3000;
     "vm.max_map_count" = 2147483642;
     "vm.swappiness" = 10;
     "vm.vfs_cache_pressure" = 50;
     "vm.dirty_background_ratio" = 20;
     "vm.dirty_ratio" = 50;
-    "kernel.sched_latency_ns" = 4000000;
-    "kernel.sched_min_granularity_ns" = 500000;
-    "kernel.sched_wakeup_granularity_ns" = 50000;
-    "kernel.sched_migration_cost_ns" = 250000;
-    "kernel.sched_nr_migrate" = 128;
-    "kernel.perf_event_max_sample_rate" = 350000;
-    "kernel.watchdog" = 0;
   };
 
   # ClamAV
@@ -129,12 +122,13 @@
   # Enable the WAYLAND and NVIDIA, plasma6 too blyat'
   services = {
     xserver = {
-      enable = false;
+      enable = true;
       xkb = {
         layout = "us";
         variant = "";
       };
       excludePackages = [ pkgs.xterm ];
+      videoDrivers = [ "nouveau" ];
     };
     displayManager.sddm = {
       enable = true;
@@ -164,6 +158,10 @@
     KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
     KWIN_DRM_USE_MODIFIERS = "1";
     KWIN_DRM_FORCE_MGPU_GL_FINISH = "1";
+    GALLIUM_DRIVER = "zink";
+    #__GLX_VENDOR_LIBRARY_NAME = "mesa";
+    #MESA_LOADER_DRIVER_OVERRIDE = "zink";
+    #NOUVEAU_USE_ZINK = "1";
   };
 
   # Dconf
@@ -180,6 +178,9 @@
     enable = true;
     extraPackages = with pkgs; [
       intel-media-driver
+      intel-media-sdk
+      mesa
+      mesa.drivers
     ];
   };
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
@@ -261,10 +262,17 @@
     liberation_ttf
   ];
 
+  # podman for distrobox
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+  };
+
   # System packages
   environment.systemPackages = with pkgs; [
     easyeffects
     clamav
+    distrobox
   ];
 
   # Don't touch
