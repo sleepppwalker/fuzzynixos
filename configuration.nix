@@ -122,7 +122,7 @@
   # Enable the WAYLAND and NVIDIA, plasma6 too blyat'
   services = {
     xserver = {
-      enable = true;
+      enable = false;
       xkb = {
         layout = "us";
         variant = "";
