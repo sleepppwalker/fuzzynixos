@@ -16,48 +16,11 @@
   # Kernel Parameters
   boot.kernelParams = [
     "nouveau.config=NvGspRm=1"
-    "fbdev=1"
-    "module_blacklist=amdgpu"
+    "nouveau.runpm=0"
     "i915.enable_psr=0"
     "i915.enable_guc=2"
     "i915.enable_fbc=1"
-    "intel_idle.max_cstate=0"
     "i915.enable_dc=0"
-    "pcie_aspm=off"
-    "intel_pstate=enable"
-    "ipv6.disable=1"
-    "pci=pcie_bus_perf"
-    "page_alloc.shuffle=1"
-    "mitigations=auto"
-    "processor.max_cstate=5"
-  ];
-  boot.blacklistedKernelModules = [
-    "rivafb"
-    "rivatv"
-    "nv"
-    "uvcvideo"
-    "nvidiafb"
-    "sp5100-tco"
-    "iTCO_wdt"
-    "pcspkr"
-    "ath9k"
-    "ath5k"
-    "brcmsmac"
-    "b43"
-    "floppy"
-    "fuse"
-    "nfs"
-    "snd_hda_codec_hdmi"
-    "ipv6"
-    "nfsd"
-    "raid1"
-    "raid0"
-    "raid10"
-    "ext4"
-    "bcachefs"
-    "btrtl"
-    "btmtk"
-    "btbcm"
   ];
 
   # Microcode
@@ -72,10 +35,7 @@
   # Kernel sysctl
   boot.kernel.sysctl = {
     "vm.max_map_count" = 2147483642;
-    "vm.swappiness" = 10;
-    "vm.vfs_cache_pressure" = 50;
-    "vm.dirty_background_ratio" = 20;
-    "vm.dirty_ratio" = 50;
+    "kernel.perf_cpu_time_max_percent" = 0;
   };
 
   # ClamAV
@@ -154,18 +114,8 @@
 
   # Environment for performance
   environment.variables = {
-    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
     KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
-    KWIN_DRM_USE_MODIFIERS = "1";
-    KWIN_DRM_FORCE_MGPU_GL_FINISH = "1";
-    GALLIUM_DRIVER = "zink";
-    #__GLX_VENDOR_LIBRARY_NAME = "mesa";
-    #MESA_LOADER_DRIVER_OVERRIDE = "zink";
-    #NOUVEAU_USE_ZINK = "1";
   };
-
-  # Dconf
-  programs.dconf.enable = true;
 
   # Unfree
   nixpkgs.config.allowUnfree = true;
@@ -179,11 +129,13 @@
     extraPackages = with pkgs; [
       intel-media-driver
       intel-media-sdk
-      mesa
-      mesa.drivers
     ];
   };
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
+  environment.sessionVariables = {
+     LIBVA_DRIVER_NAME = "iHD";
+     #VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/nouveau_icd.x86_64.json";
+     #SDL_VIDEODRIVER = "'wayland,x11,windows'";
+  };
 
   # Enable CUPS to print documents.
   services.printing.enable = false;
@@ -237,7 +189,7 @@
       shellAliases = {
         eturbo = "echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
         dturbo = "echo 1 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
-        cursorfix = "ln -s /run/current-system/sw/share/icons .local/share/icons";
+        # cursorfix = "ln -s /run/current-system/sw/share/icons .local/share/icons";
       };
     };
   };
@@ -245,9 +197,9 @@
   # Gaming
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-    localNetworkGameTransfers.openFirewall = true;
+    remotePlay.openFirewall = false;
+    dedicatedServer.openFirewall = false;
+    localNetworkGameTransfers.openFirewall = false;
   };
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
@@ -262,17 +214,10 @@
     liberation_ttf
   ];
 
-  # podman for distrobox
-  virtualisation.podman = {
-    enable = true;
-    dockerCompat = true;
-  };
-
   # System packages
   environment.systemPackages = with pkgs; [
     easyeffects
     clamav
-    distrobox
   ];
 
   # Don't touch
