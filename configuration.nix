@@ -133,8 +133,6 @@
   };
   environment.sessionVariables = {
      LIBVA_DRIVER_NAME = "iHD";
-     #VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/nouveau_icd.x86_64.json";
-     #SDL_VIDEODRIVER = "'wayland,x11,windows'";
   };
 
   # Enable CUPS to print documents.
