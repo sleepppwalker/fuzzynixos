@@ -36,17 +36,6 @@
   boot.kernel.sysctl = {
     "vm.max_map_count" = 2147483642;
     "kernel.perf_cpu_time_max_percent" = 0;
-    "kernel.sched_cfs_bandwidth_slice_us" = 3000;
-    "vm.swappiness" = 5;
-    "vm.vfs_cache_pressure" = 50;
-    "vm.dirty_background_ratio" = 20;
-    "vm.dirty_ratio" = 50;
-    "kernel.sched_latency_ns" = 4000000;
-    "kernel.sched_min_granularity_ns" = 500000;
-    "kernel.sched_wakeup_granularity_ns" = 50000;
-    "kernel.sched_migration_cost_ns" = 250000;
-    "kernel.sched_nr_migrate" = 128;
-    "kernel.perf_event_max_sample_rate" = 350000;
   };
 
   # ClamAV
@@ -138,21 +127,21 @@
   nixpkgs.config.allowUnfree = true;
 
   # Mesa and hardware acceleration video playback
-  nixpkgs.config.packageOverrides = pkgs: {
-    intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
-  };
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-media-driver
-      intel-media-sdk
-    ];
-  };
-  environment.sessionVariables = {
-     LIBVA_DRIVER_NAME = "iHD";
-     #VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/nouveau_icd.x86_64.json";
-     #SDL_VIDEODRIVER = "'wayland,x11,windows'";
-  };
+  #nixpkgs.config.packageOverrides = pkgs: {
+  #  intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
+  #};
+  #hardware.graphics = {
+  #  enable = true;
+  #  extraPackages = with pkgs; [
+  #    intel-media-driver
+  #    intel-media-sdk
+  #  ];
+  #};
+  #environment.sessionVariables = {
+  #   LIBVA_DRIVER_NAME = "iHD";
+  #   VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/nouveau_icd.x86_64.json";
+  #   SDL_VIDEODRIVER = "'wayland,x11,windows'";
+  #};
 
   # Enable CUPS to print documents.
   services.printing.enable = false;
