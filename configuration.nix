@@ -36,6 +36,17 @@
   boot.kernel.sysctl = {
     "vm.max_map_count" = 2147483642;
     "kernel.perf_cpu_time_max_percent" = 0;
+    "kernel.sched_cfs_bandwidth_slice_us" = 3000;
+    "vm.swappiness" = 5;
+    "vm.vfs_cache_pressure" = 50;
+    "vm.dirty_background_ratio" = 20;
+    "vm.dirty_ratio" = 50;
+    "kernel.sched_latency_ns" = 4000000;
+    "kernel.sched_min_granularity_ns" = 500000;
+    "kernel.sched_wakeup_granularity_ns" = 50000;
+    "kernel.sched_migration_cost_ns" = 250000;
+    "kernel.sched_nr_migrate" = 128;
+    "kernel.perf_event_max_sample_rate" = 350000;
   };
 
   # ClamAV
@@ -115,6 +126,12 @@
   # Environment for performance
   environment.variables = {
     KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
+    #KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
+    #KWIN_FORCE_SW_CURSOR = "1";
+    #GALLIUM_DRIVER = "zink";
+    #KWIN_DRM_USE_MODIFIERS = "1";
+    #KWIN_DRM_FORCE_MGPU_GL_FINISH = "1";
+    #KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
   };
 
   # Unfree
@@ -133,6 +150,8 @@
   };
   environment.sessionVariables = {
      LIBVA_DRIVER_NAME = "iHD";
+     #VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/nouveau_icd.x86_64.json";
+     #SDL_VIDEODRIVER = "'wayland,x11,windows'";
   };
 
   # Enable CUPS to print documents.
@@ -157,14 +176,14 @@
       }
     ];
     "pulse.properties" = {
-      "pulse.min.req" = "1024/48000";
-      "pulse.default.req" = "1024/48000";
-      "pulse.max.req" = "1024/48000";
-      "pulse.min.quantum" = "1024/48000";
-      "pulse.max.quantum" = "1024/48000";
+      "pulse.min.req" = "2048/48000";
+      "pulse.default.req" = "2048/48000";
+      "pulse.max.req" = "2048/48000";
+      "pulse.min.quantum" = "2048/48000";
+      "pulse.max.quantum" = "2048/48000";
     };
     "stream.properties" = {
-      "node.latency" = "1024/48000";
+      "node.latency" = "2048/48000";
       "resample.quality" = 1;
     };
   };
