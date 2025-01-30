@@ -122,7 +122,7 @@
     extraPackages = with pkgs; [
       intel-media-sdk
       intel-media-driver
-      intel-vaapi-driver
+      libvdpau-va-gl
     ];
   };
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
@@ -151,7 +151,7 @@
   services.printing.enable = false;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -239,5 +239,5 @@
   systemd.services.ModemManager.enable = false;
 
   # Don't touch
-  system.stateVersion = "24.11"; # Did you read the comment?
+  system.stateVersion = "25.05";
 }
