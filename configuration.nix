@@ -47,8 +47,8 @@
   # zram
   zramSwap = {
     enable = true;
-    algorithm = "zstd";
-    memoryPercent = 30;
+    algorithm = "lz4";
+    memoryPercent = 50;
   };
 
   # Hostname
@@ -66,6 +66,15 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+  i18n.supportedLocales = [
+    "en_US.UTF-8/UTF-8"
+    "ja_JP.UTF-8/UTF-8"
+    "ru_RU.UTF-8/UTF-8"
+  ];
+
+  console = {
+    keyMap = "en";
+  };
 
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "ru_RU.UTF-8";
@@ -84,7 +93,7 @@
     xserver = {
       enable = false;
       xkb = {
-        layout = "us";
+        layout = "us,ru";
         variant = "";
       };
       excludePackages = [ pkgs.xterm ];
@@ -100,11 +109,23 @@
       touchpad.disableWhileTyping = true;
     };
   };
+
   services.desktopManager.plasma6.enable = true;
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
     plasma-browser-integration
     oxygen
   ];
+
+  # VAAPI
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-sdk
+      intel-media-driver
+      intel-vaapi-driver
+    ];
+  };
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
   # KDE Connect
   programs.kdeconnect.enable = true;
@@ -114,34 +135,17 @@
 
   # Environment for performance
   environment.variables = {
-    KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
-    #KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
-    #KWIN_FORCE_SW_CURSOR = "1";
-    #GALLIUM_DRIVER = "zink";
-    #KWIN_DRM_USE_MODIFIERS = "1";
-    #KWIN_DRM_FORCE_MGPU_GL_FINISH = "1";
-    #KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
+    NOUVEAU_USE_ZINK = "1";
+    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
+    KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
+    KWIN_FORCE_SW_CURSOR = "1";
+    GALLIUM_DRIVER = "zink";
+    KWIN_DRM_USE_MODIFIERS = "1";
+    KWIN_DRM_FORCE_MGPU_GL_FINISH = "1";
   };
 
   # Unfree
   nixpkgs.config.allowUnfree = true;
-
-  # Mesa and hardware acceleration video playback
-  #nixpkgs.config.packageOverrides = pkgs: {
-  #  intel-vaapi-driver = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
-  #};
-  #hardware.graphics = {
-  #  enable = true;
-  #  extraPackages = with pkgs; [
-  #    intel-media-driver
-  #    intel-media-sdk
-  #  ];
-  #};
-  #environment.sessionVariables = {
-  #   LIBVA_DRIVER_NAME = "iHD";
-  #   VK_DRIVER_FILES = "/run/opengl-driver/share/vulkan/icd.d/nouveau_icd.x86_64.json";
-  #   SDL_VIDEODRIVER = "'wayland,x11,windows'";
-  #};
 
   # Enable CUPS to print documents.
   services.printing.enable = false;
@@ -165,14 +169,14 @@
       }
     ];
     "pulse.properties" = {
-      "pulse.min.req" = "2048/48000";
-      "pulse.default.req" = "2048/48000";
-      "pulse.max.req" = "2048/48000";
-      "pulse.min.quantum" = "2048/48000";
-      "pulse.max.quantum" = "2048/48000";
+      "pulse.min.req" = "1024/48000";
+      "pulse.default.req" = "1024/48000";
+      "pulse.max.req" = "1024/48000";
+      "pulse.min.quantum" = "1024/48000";
+      "pulse.max.quantum" = "1024/48000";
     };
     "stream.properties" = {
-      "node.latency" = "2048/48000";
+      "node.latency" = "1024/48000";
       "resample.quality" = 1;
     };
   };
@@ -183,9 +187,15 @@
     description = "kowasu";
     extraGroups = [ "networkmanager" "wheel" "gamemode" ];
     packages = with pkgs; [
-      htop
+      btop
       neofetch
       telegram-desktop
+      libreoffice-qt6-fresh
+      emacs
+      obs-studio
+      vlc
+      mpv
+      discord
     ];
   };
 
@@ -195,7 +205,6 @@
       shellAliases = {
         eturbo = "echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
         dturbo = "echo 1 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
-        # cursorfix = "ln -s /run/current-system/sw/share/icons .local/share/icons";
       };
     };
   };
@@ -213,7 +222,6 @@
   # Install firefox.
   programs.firefox.enable = true;
 
-
   # Fonts
   fonts.packages = with pkgs; [
     noto-fonts-cjk-sans
@@ -225,6 +233,10 @@
     easyeffects
     clamav
   ];
+
+  # Services
+  systemd.services.systemd-timesyncd.enable = false;
+  systemd.services.ModemManager.enable = false;
 
   # Don't touch
   system.stateVersion = "24.11"; # Did you read the comment?
