@@ -11,7 +11,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Kernel Parameters
   boot.kernelParams = [
@@ -40,7 +40,7 @@
 
   # ClamAV
   services.clamav = {
-    daemon.enable = false;
+    daemon.enable = true;
     updater.enable = false;
   };
 
@@ -136,12 +136,12 @@
   # Environment for performance
   environment.variables = {
     NOUVEAU_USE_ZINK = "1";
-    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
-    KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
-    KWIN_FORCE_SW_CURSOR = "1";
-    GALLIUM_DRIVER = "zink";
-    KWIN_DRM_USE_MODIFIERS = "1";
-    KWIN_DRM_FORCE_MGPU_GL_FINISH = "1";
+    #KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
+    #KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
+    #KWIN_FORCE_SW_CURSOR = "1";
+    #GALLIUM_DRIVER = "zink";
+    #KWIN_DRM_USE_MODIFIERS = "1";
+    #KWIN_DRM_FORCE_MGPU_GL_FINISH = "1";
   };
 
   # Unfree
@@ -196,6 +196,7 @@
       vlc
       mpv
       discord
+      clamtk
     ];
   };
 
