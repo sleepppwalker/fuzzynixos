@@ -2,7 +2,7 @@
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
     ];
 
@@ -23,7 +23,7 @@
     "i915.enable_dc=0"
   ];
 
-  # CPU and Microcode
+  # Microcode
   hardware.cpu.intel.updateMicrocode = true;
   services.thermald.enable = true;
 
@@ -52,13 +52,13 @@
     memoryPercent = 50;
   };
 
-  # Hostname 
+  # Hostname
   networking.hostName = "kowareru";
-  
+
   # Bluetooth
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
-  
+
   # Enable networking
   networking.networkmanager.enable = true;
 
@@ -72,7 +72,7 @@
     "ja_JP.UTF-8/UTF-8"
     "ru_RU.UTF-8/UTF-8"
   ];
-  
+
   console = {
     keyMap = "en";
   };
@@ -88,13 +88,8 @@
     LC_TELEPHONE = "ru_RU.UTF-8";
     LC_TIME = "ru_RU.UTF-8";
   };
-  
-  # dconf
-  programs.dconf = {
-    enable = true;
-  };
 
-  # Enable the GNOME Desktop Environment. Turn off X11 and enable NOUVEAU.
+  # Enable the WAYLAND and NVIDIA, plasma6 too blyat'
   services = {
     xserver = {
       enable = false;
@@ -102,51 +97,32 @@
         layout = "us,ru";
         variant = "";
       };
-      displayManager.gdm.enable = true;
-      desktopManager.gnome.enable = true;
       excludePackages = [ pkgs.xterm ];
       videoDrivers = [ "nouveau" ];
+    };
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      enableHidpi = true;
+      autoNumlock = true;
+    };
+    desktopManager.plasma6 = {
+      enable = true;
     };
     libinput = {
       touchpad.disableWhileTyping = true;
     };
   };
-  environment.gnome.excludePackages = with pkgs; [
-    orca
-    evince
-    geary
-    gnome-disk-utility
-    gnome-tour
-    gnome-clocks
-    gnome-user-docs
-    baobab
-    epiphany
-    gnome-calendar
-    gnome-characters
-    gnome-contacts
-    gnome-font-viewer
-    gnome-logs
-    gnome-maps
-    gnome-music
-    gnome-weather
-    gnome-connections
-    simple-scan
-    snapshot
-    totem
-    yelp
-    gnome-software
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    plasma-browser-integration
+    oxygen
   ];
-  
+
   # xdg-portals
   xdg.portal = {
    enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-gnome
-    ];
   };
-  
+
   # VAAPI
   hardware.graphics = {
     enable = true;
@@ -158,11 +134,26 @@
   };
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
-  # Enable CUPS to print documents.
-  services.printing.enable = false;
-  
+  # KDE Connect
+  programs.kdeconnect.enable = true;
+
   # Exclude manual HTML
   documentation.nixos.enable = false;
+
+  # Environment for performance
+  environment.variables = {
+    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
+    KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
+    KWIN_FORCE_SW_CURSOR = "1";
+    GALLIUM_DRIVER = "zink";
+    KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
+  };
+
+  # Unfree
+  nixpkgs.config.allowUnfree = true;
+
+  # Enable CUPS to print documents.
+  services.printing.enable = false;
 
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
@@ -173,7 +164,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-  
+
   # Best sound
   services.pipewire.extraConfig.pipewire-pulse."92-low-latency" = {
     "context.properties" = [
@@ -195,7 +186,7 @@
     };
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
+  # User
   users.users.kowasu = {
     isNormalUser = true;
     description = "kowasu";
@@ -204,8 +195,8 @@
       btop
       neofetch
       telegram-desktop
-      libreoffice-fresh
-      emacs-gtk
+      libreoffice-qt6-fresh
+      emacs
       obs-studio
       vlc
       mpv
@@ -214,7 +205,7 @@
       easyeffects
     ];
   };
-  
+
   # Aliases
   programs = {
     bash = {
@@ -224,7 +215,7 @@
       };
     };
   };
-  
+
   # Gaming
   programs.steam = {
     enable = true;
@@ -238,9 +229,6 @@
   # Install firefox.
   programs.firefox.enable = true;
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-  
   # Fonts
   fonts.packages = with pkgs; [
     noto-fonts-cjk-sans
@@ -249,7 +237,7 @@
 
   # System packages
   environment.systemPackages = with pkgs; [
-    
+
   ];
 
   # Services
