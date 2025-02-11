@@ -1,7 +1,7 @@
 # Fetch!
 ![Screenshot2.png](./Screenshots/Screenshot2.png)
 
-# Just desktop-screen
+# Desktop screen!
 ![Screenshot1.png](./Screenshots/Screenshot1.png)
 
 # Link to wallpapers
