@@ -21,11 +21,18 @@
     "i915.enable_guc=2"
     "i915.enable_fbc=1"
     "i915.enable_dc=0"
+    "fbdev=1"
   ];
 
   # Microcode
   hardware.cpu.intel.updateMicrocode = true;
   services.thermald.enable = true;
+
+  # CPU
+  #services.undervolt = {
+  #  enable = true;
+  #  coreOffset = -110;
+  #};
 
   # SSD
   services.fstrim = {
@@ -142,11 +149,12 @@
 
   # Environment for performance
   environment.variables = {
-    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
+    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
     KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
     KWIN_FORCE_SW_CURSOR = "1";
+    NOUVEAU_USE_ZINK = "1";
     GALLIUM_DRIVER = "zink";
-    KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
+    #KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
   };
 
   # Unfree
