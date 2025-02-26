@@ -137,6 +137,7 @@
       intel-media-sdk
       intel-media-driver
       libvdpau-va-gl
+      #intel-compute-runtime-legacy1
     ];
   };
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
@@ -230,6 +231,12 @@
     remotePlay.openFirewall = false;
     dedicatedServer.openFirewall = false;
     localNetworkGameTransfers.openFirewall = false;
+    package = pkgs.steam.override {
+      extraPkgs =
+      pkgs: with pkgs; [
+        kdePackages.breeze
+      ];
+    };
   };
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
