@@ -4,5 +4,8 @@
 # Desktop screen!
 ![Screenshot1.png](./Screenshots/Screenshot3.png)
 
+# Accent color 
+#88c0d0
+
 # Link to wallpapers
 [Wallpapers Project](https://github.com/kowareru/wallpapers)
