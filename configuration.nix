@@ -11,15 +11,15 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Kernel
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Kernel Parameters
   boot.kernelParams = [
     "nouveau.config=NvGspRm=1"
     "i915.enable_psr=0"
-    "i915.enable_guc=2"
     "i915.enable_fbc=1"
-    "i915.enable_dc=0"
+    "i915.enable_dc=1"
+    "i915.enable_gvt=0"
     "fbdev=1"
   ];
 
@@ -98,7 +98,6 @@
         variant = "";
       };
       excludePackages = [ pkgs.xterm ];
-      videoDrivers = [ "nouveau" ];
     };
     displayManager.sddm = {
       enable = true;
@@ -144,7 +143,7 @@
   environment.variables = {
     KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
     NOUVEAU_USE_ZINK = "1";
-    GALLIUM_DRIVER = "zink";
+    #GALLIUM_DRIVER = "zink";
     #KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
   };
 
@@ -171,6 +170,8 @@
     extraGroups = [ "networkmanager" "wheel" "gamemode" ];
     packages = with pkgs; [
       btop
+      anki-bin
+      songrec
       neofetch
       telegram-desktop
       libreoffice-qt6-fresh
