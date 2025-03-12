@@ -143,7 +143,7 @@
   environment.variables = {
     KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
     NOUVEAU_USE_ZINK = "1";
-    #GALLIUM_DRIVER = "zink";
+    GALLIUM_DRIVER = "zink";
     #KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
   };
 
@@ -154,7 +154,7 @@
   services.printing.enable = false;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -189,7 +189,9 @@
   programs = {
     bash = {
       shellAliases = {
+        # Enable cpu turbo boost
         eturbo = "echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
+        # Disable cpu turbo boost
         dturbo = "echo 1 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
       };
     };
@@ -211,8 +213,9 @@
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
 
-  # Install firefox.
+  # Install firefox and thunderbird
   programs.firefox.enable = true;
+  programs.thunderbird.enable = true;
 
   # Fonts
   fonts.packages = with pkgs; [
