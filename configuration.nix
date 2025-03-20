@@ -11,7 +11,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   # Kernel Parameters
   boot.kernelParams = [
@@ -49,11 +49,11 @@
   zramSwap = {
     enable = true;
     algorithm = "lz4";
-    memoryPercent = 50;
+    memoryPercent = 35;
   };
 
   # Hostname
-  networking.hostName = "kowareru";
+  networking.hostName = "neptune";
 
   # Bluetooth
   hardware.bluetooth.enable = true;
@@ -141,10 +141,9 @@
 
   # Environment for performance
   environment.variables = {
-    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
+    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
     NOUVEAU_USE_ZINK = "1";
     GALLIUM_DRIVER = "zink";
-    #KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
   };
 
   # Unfree
@@ -164,6 +163,7 @@
   };
 
   # User
+  # Maybe change to "Yukiharu"?
   users.users.kowasu = {
     isNormalUser = true;
     description = "kowasu";
@@ -233,5 +233,5 @@
   systemd.services.ModemManager.enable = false;
 
   # Don't touch
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 }
