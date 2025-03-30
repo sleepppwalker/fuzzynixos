@@ -15,16 +15,16 @@
 
   # Kernel Parameters
   boot.kernelParams = [
-    "nouveau.config=NvGspRm=1"
-    "i915.enable_psr=0"
-    "i915.enable_fbc=1"
-    "i915.enable_dc=1"
-    "i915.enable_gvt=0"
+    #"nouveau.config=NvGspRm=1"
+    #"i915.enable_psr=0"
+    #"i915.enable_fbc=1"
+    #"i915.enable_dc=1"
+    #"i915.enable_gvt=0"
     "fbdev=1"
   ];
 
   # Microcode
-  hardware.cpu.intel.updateMicrocode = true;
+  # hardware.cpu.intel.updateMicrocode = true;
   services.thermald.enable = true;
 
   # SSD
@@ -42,7 +42,7 @@
   # ClamAV
   services.clamav = {
     daemon.enable = true;
-    updater.enable = false;
+    updater.enable = true;
   };
 
   # zram
@@ -123,15 +123,15 @@
   };
 
   # VAAPI
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-media-sdk
-      intel-media-driver
-      libvdpau-va-gl
-    ];
-  };
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
+  #hardware.graphics = {
+    #enable = true;
+    #extraPackages = with pkgs; [
+      #intel-media-sdk
+      #intel-media-driver
+      #libvdpau-va-gl
+    #];
+  #};
+  #environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
   # KDE Connect
   programs.kdeconnect.enable = true;
@@ -166,7 +166,7 @@
   };
 
   # User
-  # Maybe change to "Yukiharu"?
+  # Maybe change to "Yukiharu"? - no
   users.users.kowasu = {
     isNormalUser = true;
     description = "kowasu";
