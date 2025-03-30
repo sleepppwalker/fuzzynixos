@@ -11,7 +11,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Kernel
-  boot.kernelPackages = pkgs.linuxPackages_zen;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Kernel Parameters
   boot.kernelParams = [
@@ -48,7 +48,7 @@
   # zram
   zramSwap = {
     enable = true;
-    algorithm = "lz4";
+    algorithm = "zstd";
     memoryPercent = 35;
   };
 
@@ -89,7 +89,7 @@
     LC_TIME = "ru_RU.UTF-8";
   };
 
-  # Enable the WAYLAND and NVIDIA, plasma6 too blyat'
+  # Enable the WAYLAND sddm and plasma6 too
   services = {
     xserver = {
       enable = false;
@@ -140,10 +140,13 @@
   documentation.nixos.enable = false;
 
   # Environment for performance
+  # remove "#" to have a nice day
   environment.variables = {
-    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
-    NOUVEAU_USE_ZINK = "1";
-    GALLIUM_DRIVER = "zink";
+    #KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
+    #KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
+    #KWIN_FORCE_SW_CURSOR = "1";
+    #NOUVEAU_USE_ZINK = "1";
+    #GALLIUM_DRIVER = "zink";
   };
 
   # Unfree
@@ -153,7 +156,7 @@
   services.printing.enable = false;
 
   # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
+  services.pulseaudio.enable = false; # or use hardware on 24.11
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -233,5 +236,5 @@
   systemd.services.ModemManager.enable = false;
 
   # Don't touch
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.05"; # or change to current installed
 }
