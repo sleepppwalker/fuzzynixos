@@ -15,16 +15,20 @@
 
   # Kernel Parameters
   boot.kernelParams = [
-    #"nouveau.config=NvGspRm=1"
-    #"i915.enable_psr=0"
-    #"i915.enable_fbc=1"
-    #"i915.enable_dc=1"
-    #"i915.enable_gvt=0"
+    "nouveau.config=NvGspRm=1"
+    "pcie_aspm=force"
+    "intel_pstate=active"
+    "processor.max_cstate=5"
+    "intel_idle.max_cstate=4"
+    "i915.enable_psr=0"
+    "i915.enable_fbc=1"
+    "i915.enable_dc=1"
+    "i915.enable_gvt=0"
     "fbdev=1"
   ];
 
   # Microcode
-  # hardware.cpu.intel.updateMicrocode = true;
+  hardware.cpu.intel.updateMicrocode = true;
   services.thermald.enable = true;
 
   # SSD
@@ -42,7 +46,7 @@
   # ClamAV
   services.clamav = {
     daemon.enable = true;
-    updater.enable = true;
+    updater.enable = false;
   };
 
   # zram
@@ -89,7 +93,7 @@
     LC_TIME = "ru_RU.UTF-8";
   };
 
-  # Enable the WAYLAND sddm and plasma6 too
+  # Enable the WAYLAND and NVIDIA, plasma6 too blyat'
   services = {
     xserver = {
       enable = false;
@@ -123,15 +127,17 @@
   };
 
   # VAAPI
-  #hardware.graphics = {
-    #enable = true;
-    #extraPackages = with pkgs; [
-      #intel-media-sdk
-      #intel-media-driver
-      #libvdpau-va-gl
-    #];
-  #};
-  #environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
+  hardware.graphics = {
+    enable = true;
+    extraPackages = with pkgs; [
+      intel-media-sdk
+      intel-media-driver
+      intel-compute-runtime-legacy1
+      intel-vaapi-driver
+      libvdpau-va-gl
+    ];
+  };
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
   # KDE Connect
   programs.kdeconnect.enable = true;
@@ -140,13 +146,13 @@
   documentation.nixos.enable = false;
 
   # Environment for performance
-  # remove "#" to have a nice day
   environment.variables = {
-    #KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "1";
-    #KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
-    #KWIN_FORCE_SW_CURSOR = "1";
-    #NOUVEAU_USE_ZINK = "1";
-    #GALLIUM_DRIVER = "zink";
+    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
+    #KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
+    KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
+    KWIN_FORCE_SW_CURSOR = "1";
+    NOUVEAU_USE_ZINK = "1";
+    GALLIUM_DRIVER = "zink";
   };
 
   # Unfree
@@ -156,7 +162,7 @@
   services.printing.enable = false;
 
   # Enable sound with pipewire.
-  services.pulseaudio.enable = false; # or use hardware on 24.11
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -166,7 +172,7 @@
   };
 
   # User
-  # Maybe change to "Yukiharu"? - no
+  # Maybe change to "Yukiharu"?
   users.users.kowasu = {
     isNormalUser = true;
     description = "kowasu";
@@ -174,13 +180,13 @@
     packages = with pkgs; [
       btop
       anki-bin
+      obsidian
       songrec
       neofetch
       telegram-desktop
       libreoffice-qt6-fresh
       emacs
       obs-studio
-      vlc
       mpv
       discord
       clamtk
@@ -236,5 +242,5 @@
   systemd.services.ModemManager.enable = false;
 
   # Don't touch
-  system.stateVersion = "25.05"; # or change to current installed
+  system.stateVersion = "25.05";
 }
