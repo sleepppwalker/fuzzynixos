@@ -10,22 +10,21 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Kernel (latest с багом)
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Kernel Parameters
   boot.kernelParams = [
-    "nouveau.config=NvGspRm=1"
-    "pcie_aspm=force"
-    "intel_pstate=active"
-    "processor.max_cstate=5"
-    "intel_idle.max_cstate=4"
     "i915.enable_psr=0"
     "i915.enable_fbc=1"
     "i915.enable_dc=1"
-    "i915.enable_gvt=0"
-    "fbdev=1"
   ];
+
+  boot.extraModprobeConfig = ''
+    options nvidia NVreg_UsePageAttributeTable=1
+    options nvidia NVreg_EnableGpuFirmware=0
+  '';
+
 
   # Microcode
   hardware.cpu.intel.updateMicrocode = true;
@@ -93,7 +92,26 @@
     LC_TIME = "ru_RU.UTF-8";
   };
 
-  # Enable the WAYLAND and NVIDIA, plasma6 too blyat'
+  # Unfree
+  nixpkgs.config.allowUnfree = true;
+
+  # Fonts
+  fonts.packages = with pkgs; [
+    noto-fonts-cjk-sans
+    liberation_ttf
+  ];
+
+  # System packages
+  environment.systemPackages = with pkgs; [
+
+  ];
+
+  # Services
+  systemd.services.systemd-timesyncd.enable = false;
+  systemd.services.ModemManager.enable = false;
+
+  # Module plasma
+  # Enable the WAYLAND, NVIDIA, SDDM and Plasma6
   services = {
     xserver = {
       enable = false;
@@ -126,7 +144,18 @@
    enable = true;
   };
 
-  # VAAPI
+  # KDE Connect
+  programs.kdeconnect.enable = true;
+
+  # Module environment
+  # Environment for performance
+  environment.variables = {
+    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
+    __GL_YIELD = "USLEEP";
+  };
+
+  # Module graphics
+  # Enable OpenGL
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
@@ -137,30 +166,37 @@
       libvdpau-va-gl
     ];
   };
+
+  # VAAPI
   environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
 
-  # KDE Connect
-  programs.kdeconnect.enable = true;
+  # Load nvidia driver for Xorg and Wayland
+  services.xserver.videoDrivers = ["nvidia"];
 
-  # Exclude manual HTML
-  documentation.nixos.enable = false;
-
-  # Environment for performance
-  environment.variables = {
-    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
-    #KWIN_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
-    KWIN_DRM_DELAY_VRR_CURSOR_UPDATES = "1";
-    KWIN_FORCE_SW_CURSOR = "1";
-    NOUVEAU_USE_ZINK = "1";
-    GALLIUM_DRIVER = "zink";
+  hardware.nvidia = {
+    modesetting.enable = true;
+    powerManagement.enable = false;
+    powerManagement.finegrained = false;
+    open = false;
+    nvidiaSettings = true;
+    package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  # Unfree
-  nixpkgs.config.allowUnfree = true;
+  hardware.nvidia.prime = {
+    reverseSync.enable = true;
+    allowExternalGpu = false;
+    intelBusId = "PCI:0:2:0";
+    nvidiaBusId = "PCI:1:0:0";
+  };
+
+  # Module other/other
+  # Exclude manual HTML
+  documentation.nixos.enable = false;
 
   # Enable CUPS to print documents.
   services.printing.enable = false;
 
+  # Module sound
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -171,8 +207,29 @@
     pulse.enable = true;
   };
 
+  # Best sound
+  services.pipewire.extraConfig.pipewire-pulse."92-low-latency" = {
+    "context.properties" = [
+      {
+        name = "libpipewire-module-protocol-pulse";
+        args = { };
+      }
+    ];
+    "pulse.properties" = {
+      "pulse.min.req" = "1024/48000";
+      "pulse.default.req" = "1024/48000";
+      "pulse.max.req" = "1024/48000";
+      "pulse.min.quantum" = "1024/48000";
+      "pulse.max.quantum" = "1024/48000";
+    };
+    "stream.properties" = {
+      "node.latency" = "1024/48000";
+      "resample.quality" = 1;
+    };
+  };
+
+  # Module user/kowasu
   # User
-  # Maybe change to "Yukiharu"?
   users.users.kowasu = {
     isNormalUser = true;
     description = "kowasu";
@@ -189,11 +246,11 @@
       obs-studio
       mpv
       discord
-      clamtk
       easyeffects
     ];
   };
 
+  # Module other/aliases
   # Aliases
   programs = {
     bash = {
@@ -206,6 +263,7 @@
     };
   };
 
+  # Module apps/steam
   # Gaming
   programs.steam = {
     enable = true;
@@ -222,25 +280,51 @@
   programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
 
-  # Install firefox and thunderbird
-  programs.firefox.enable = true;
-  programs.thunderbird.enable = true;
+  # Module apps/firefox
+  # Install firefox
+  programs.firefox = {
+    enable = true;
+    languagePacks = [ "ru" ];
+    preferences = {
+      "browser.uidensity" = 1;
+      "extensions.pocket.api" =  "";
+      "extensions.pocket.enabled" = false;
+      "extensions.pocket.site" = "";
+      "extensions.pocket.oAuthConsumerKey" = "";
+      "privacy.trackingprotection.enabled" = true;
+      "privacy.donottrackheader.enabled" = true;
+      "toolkit.telemetry.archive.enabled" = false;
+      "toolkit.telemetry.bhrPing.enabled" = false;
+      "toolkit.telemetry.cachedClientID" = "";
+      "toolkit.telemetry.firstShutdownPing.enabled" = false;
+      "toolkit.telemetry.hybridContent.enabled"= false;
+      "toolkit.telemetry.newProfilePing.enabled"= false;
+      "toolkit.telemetry.previousBuildID" = "";
+      "toolkit.telemetry.reportingpolicy.firstRun"= false;
+      "toolkit.telemetry.server" = "";
+      "toolkit.telemetry.server_owner" = "";
+      "toolkit.telemetry.shutdownPingSender.enabled" = false;
+      "toolkit.telemetry.unified" = false;
+      "toolkit.telemetry.updatePing.enabled" = false;
+      "datareporting.healthreport.infoURL" = "";
+      "datareporting.healthreport.uploadEnabled" = false;
+      "datareporting.policy.dataSubmissionEnabled" = false;
+      "datareporting.policy.firstRunURL" = "";
+      "browser.tabs.crashReporting.sendReport" = false;
+      "browser.tabs.crashReporting.email" = false;
+      "browser.tabs.crashReporting.emailMe" = false;
+      "breakpad.reportURL" = "";
+      "security.ssl.errorReporting.automatic" = false;
+      "toolkit.crashreporter.infoURL" = "";
+      "network.allow-experiments" = false;
+      "dom.ipc.plugins.reportCrashURL" = false;
+      "dom.ipc.plugins.flash.subprocess.crashreporter.enabled" = false;
+      "network.trr.mode" = 3;
+      "network.trr.uri" = "https://mozilla.cloudflare-dns.com/dns-query";
+      "network.trr.bootstrapAddress" = "1.1.1.1";
+    };
+  };
 
-  # Fonts
-  fonts.packages = with pkgs; [
-    noto-fonts-cjk-sans
-    liberation_ttf
-  ];
-
-  # System packages
-  environment.systemPackages = with pkgs; [
-
-  ];
-
-  # Services
-  systemd.services.systemd-timesyncd.enable = false;
-  systemd.services.ModemManager.enable = false;
-
-  # Don't touch
+  # Don't touch !!!
   system.stateVersion = "25.05";
 }
