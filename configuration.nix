@@ -52,11 +52,11 @@
   zramSwap = {
     enable = true;
     algorithm = "zstd";
-    memoryPercent = 35;
+    memoryPercent = 30;
   };
 
   # Hostname
-  networking.hostName = "neptune";
+  networking.hostName = "mercury";
 
   # Bluetooth
   hardware.bluetooth.enable = true;
@@ -69,7 +69,7 @@
   time.timeZone = "Asia/Chita";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "ru_RU.UTF-8";
   i18n.supportedLocales = [
     "en_US.UTF-8/UTF-8"
     "ja_JP.UTF-8/UTF-8"
@@ -242,11 +242,11 @@
       neofetch
       telegram-desktop
       libreoffice-qt6-fresh
-      emacs
       obs-studio
       mpv
       discord
       easyeffects
+      clamtk
     ];
   };
 
