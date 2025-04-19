@@ -293,6 +293,7 @@
       "extensions.pocket.oAuthConsumerKey" = "";
       "privacy.trackingprotection.enabled" = true;
       "privacy.donottrackheader.enabled" = true;
+      "toolkit.telemetry.enabled" = false;
       "toolkit.telemetry.archive.enabled" = false;
       "toolkit.telemetry.bhrPing.enabled" = false;
       "toolkit.telemetry.cachedClientID" = "";
@@ -319,10 +320,16 @@
       "network.allow-experiments" = false;
       "dom.ipc.plugins.reportCrashURL" = false;
       "dom.ipc.plugins.flash.subprocess.crashreporter.enabled" = false;
+      "dom.security.https_only_mode" = true;
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://mozilla.cloudflare-dns.com/dns-query";
       "network.trr.bootstrapAddress" = "1.1.1.1";
       "ui.key.menuAccessKeyFocuses" = false;
+      "browser.contentblocking.category" = "strict";
+      "privacy.globalprivacycontrol.enabled" = true;
+      "datareporting.usage.uploadEnabled" = false;
+      "browser.send_pings" = false;
+      "browser.crashReports.unsubmittedCheck.autoSubmit2" = false;
     };
   };
 
