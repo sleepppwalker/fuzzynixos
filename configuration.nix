@@ -322,6 +322,7 @@
       "network.trr.mode" = 3;
       "network.trr.uri" = "https://mozilla.cloudflare-dns.com/dns-query";
       "network.trr.bootstrapAddress" = "1.1.1.1";
+      "ui.key.menuAccessKeyFocuses" = false;
     };
   };
 
