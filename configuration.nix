@@ -52,7 +52,7 @@
   zramSwap = {
     enable = true;
     algorithm = "zstd";
-    memoryPercent = 30;
+    memoryPercent = 25;
   };
 
   # Hostname
@@ -205,27 +205,78 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    extraConfig = {
+      pipewire-pulse."92-low-latency" = {
+        "context.properties" = [
+          {
+            name = "libpipewire-module-protocol-pulse";
+            args = { };
+          }
+        ];
+        "pulse.properties" = {
+          "pulse.min.req" = "1024/48000";
+          "pulse.default.req" = "1024/48000";
+          "pulse.max.req" = "1024/48000";
+          "pulse.min.quantum" = "1024/48000";
+          "pulse.max.quantum" = "1024/48000";
+        };
+        "stream.properties" = {
+          "node.latency" = "1024/48000";
+          "resample.quality" = 4;
+        };
+      };
+      pipewire."92-low-latency" = {
+        "context.properties" = {
+          "default.clock.rate" = "48000";
+          "default.clock.quantum" = "1024";
+          "default.clock.min-quantum" = "1024";
+          "default.clock.max-quantum" = "1024";
+        };
+        "context.modules" = [
+          {
+            name = "libpipewire-module-rt";
+            args = {
+              "nice.level" = "-20";
+              "rt.prio" = "99";
+              "rt.time.soft" = "99999";
+              "rt.time.hard" = "99999";
+            };
+          }
+        ];
+      };
+    };
   };
-
-  # Best sound
-  services.pipewire.extraConfig.pipewire-pulse."92-low-latency" = {
-    "context.properties" = [
-      {
-        name = "libpipewire-module-protocol-pulse";
-        args = { };
-      }
-    ];
-    "pulse.properties" = {
-      "pulse.min.req" = "1024/48000";
-      "pulse.default.req" = "1024/48000";
-      "pulse.max.req" = "1024/48000";
-      "pulse.min.quantum" = "1024/48000";
-      "pulse.max.quantum" = "1024/48000";
-    };
-    "stream.properties" = {
-      "node.latency" = "1024/48000";
-      "resample.quality" = 1;
-    };
+  security.pam.loginLimits = [
+    {
+      domain = "@audio";
+      item = "memlock";
+      type = "-";
+      value = "unlimited";
+    }
+    {
+      domain = "@audio";
+      item = "rtprio";
+      type = "-";
+      value = "99";
+    }
+    {
+      domain = "@audio";
+      item = "nofile";
+      type = "soft";
+      value = "99999";
+    }
+    {
+      domain = "@audio";
+      item = "nofile";
+      type = "hard";
+      value = "99999";
+    }
+  ];
+  services.udev = {
+    extraRules = ''
+      KERNEL=="rtc0", GROUP="audio"
+      KERNEL=="hpet", GROUP="audio"
+    '';
   };
 
   # Module user/kowasu
@@ -233,7 +284,7 @@
   users.users.kowasu = {
     isNormalUser = true;
     description = "kowasu";
-    extraGroups = [ "networkmanager" "wheel" "gamemode" ];
+    extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
     packages = with pkgs; [
       btop
       anki-bin
