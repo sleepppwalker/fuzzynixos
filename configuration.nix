@@ -10,9 +10,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Kernel (latest с багом)
-  # boot.kernelPackages = pkgs.linuxPackages_latest;
-
   # Kernel Parameters
   boot.kernelParams = [
     "i915.enable_psr=0"
@@ -26,7 +23,7 @@
   '';
 
 
-  # Microcode
+  # CPU-tuning
   hardware.cpu.intel.updateMicrocode = true;
   services.thermald.enable = true;
 
@@ -111,7 +108,7 @@
   systemd.services.ModemManager.enable = false;
 
   # Module plasma
-  # Enable the WAYLAND, NVIDIA, SDDM and Plasma6
+  # SDDM and Plasma6
   services = {
     xserver = {
       enable = false;
@@ -295,7 +292,7 @@
       libreoffice-qt6-fresh
       obs-studio
       mpv
-      discord
+      vesktop
       easyeffects
       clamtk
     ];
