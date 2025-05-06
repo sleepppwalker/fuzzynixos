@@ -65,7 +65,16 @@
   # Set your time zone.
   time.timeZone = "Asia/Chita";
 
-  # Select internationalisation properties.
+  # Select internationalisation properties
+  /* i18n.inputMethod = {
+   type = "fcitx5";
+   enable = true;
+   fcitx5.addons = with pkgs; [
+     fcitx5-mozc
+     fcitx5-gtk
+   ];
+  }; */
+
   i18n.defaultLocale = "ru_RU.UTF-8";
   i18n.supportedLocales = [
     "en_US.UTF-8/UTF-8"
@@ -93,10 +102,17 @@
   nixpkgs.config.allowUnfree = true;
 
   # Fonts
-  fonts.packages = with pkgs; [
-    noto-fonts-cjk-sans
-    liberation_ttf
-  ];
+  fonts = {
+    packages = with pkgs; [
+      noto-fonts-cjk-serif
+      noto-fonts-cjk-sans
+      noto-fonts-emoji
+      nerdfetch
+    ];
+    fontconfig = {
+      useEmbeddedBitmaps = true;
+    };
+  };
 
   # System packages
   environment.systemPackages = with pkgs; [
@@ -281,7 +297,7 @@
   users.users.kowasu = {
     isNormalUser = true;
     description = "kowasu";
-    extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
+    extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" "libvirtd" ];
     packages = with pkgs; [
       btop
       anki-bin
@@ -298,18 +314,48 @@
     ];
   };
 
-  # Module other/aliases
-  # Aliases
-  programs = {
-    bash = {
-      shellAliases = {
-        # Enable cpu turbo boost
-        eturbo = "echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
-        # Disable cpu turbo boost
-        dturbo = "echo 1 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
+  # Virtualization moduke
+  # Enable libvirt and qemu
+  # чому отключено runAsRoot? - копируем iso в tmp)))
+  virtualisation = {
+    libvirtd = {
+      enable = true;
+      onBoot = "ignore";
+      onShutdown = "shutdown";
+      qemu = {
+        package = pkgs.qemu_kvm;
+        runAsRoot = false;
+        swtpm.enable = true;
+        ovmf = {
+          enable = true;
+          packages = [(pkgs.OVMF.override {
+            secureBoot = true;
+            tpmSupport = true;
+          }).fd];
+        };
       };
     };
   };
+  programs.virt-manager.enable = true;
+
+  # Module shell
+  # zsh and aliases
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+    shellAliases = {
+      ll = "ls -l";
+      eturbo = "echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
+      dturbo = "echo 1 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
+    };
+    histSize = 2000;
+  };
+  # disable message
+  system.userActivationScripts.zshrc = "touch .zshrc";
+  # set as default shell
+  users.defaultUserShell = pkgs.zsh;
 
   # Module apps/steam
   # Gaming
