@@ -311,6 +311,8 @@
       vesktop
       easyeffects
       clamtk
+      prismlauncher
+      heroic
     ];
   };
 
