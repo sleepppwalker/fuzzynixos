@@ -19,13 +19,16 @@
 
   boot.extraModprobeConfig = ''
     options nvidia NVreg_UsePageAttributeTable=1
-    options nvidia NVreg_EnableGpuFirmware=0
+    options nvidia NVreg_RegistryDwords=RMIntrLockingMode=1
   '';
-
 
   # CPU-tuning
   hardware.cpu.intel.updateMicrocode = true;
   services.thermald.enable = true;
+  services.undervolt = {
+    enable = true;
+    coreOffset = -110;
+  };
 
   # SSD
   services.fstrim = {
@@ -64,16 +67,6 @@
 
   # Set your time zone.
   time.timeZone = "Asia/Chita";
-
-  # Select internationalisation properties
-  /* i18n.inputMethod = {
-   type = "fcitx5";
-   enable = true;
-   fcitx5.addons = with pkgs; [
-     fcitx5-mozc
-     fcitx5-gtk
-   ];
-  }; */
 
   i18n.defaultLocale = "ru_RU.UTF-8";
   i18n.supportedLocales = [
@@ -189,7 +182,8 @@
   hardware.nvidia = {
     modesetting.enable = true;
     powerManagement.enable = false;
-    powerManagement.finegrained = false;
+    powerManagement.finegrained = true;
+    gsp.enable = false;
     open = false;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
@@ -299,9 +293,9 @@
     description = "kowasu";
     extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" "libvirtd" ];
     packages = with pkgs; [
+      kdePackages.kdenlive
       btop
       anki-bin
-      obsidian
       songrec
       neofetch
       telegram-desktop
@@ -313,6 +307,8 @@
       clamtk
       prismlauncher
       heroic
+      v2rayn
+      byedpi
     ];
   };
 
@@ -329,11 +325,7 @@
         runAsRoot = false;
         swtpm.enable = true;
         ovmf = {
-          enable = true;
-          packages = [(pkgs.OVMF.override {
-            secureBoot = true;
-            tpmSupport = true;
-          }).fd];
+          enable = false;
         };
       };
     };
