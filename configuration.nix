@@ -28,6 +28,7 @@
   services.undervolt = {
     enable = true;
     coreOffset = -110;
+    turbo = 1;
   };
 
   # SSD
@@ -45,7 +46,10 @@
   # ClamAV
   services.clamav = {
     daemon.enable = true;
-    updater.enable = false;
+    updater = {
+      enable = false;
+      frequency = 1;
+    };
   };
 
   # zram
@@ -68,7 +72,7 @@
   # Set your time zone.
   time.timeZone = "Asia/Chita";
 
-  i18n.defaultLocale = "ru_RU.UTF-8";
+  i18n.defaultLocale = "en_US.UTF-8";
   i18n.supportedLocales = [
     "en_US.UTF-8/UTF-8"
     "ja_JP.UTF-8/UTF-8"
@@ -183,8 +187,8 @@
     modesetting.enable = true;
     powerManagement.enable = false;
     powerManagement.finegrained = true;
-    gsp.enable = false;
-    open = false;
+    gsp.enable = true;
+    open = true;
     nvidiaSettings = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
@@ -295,7 +299,6 @@
     packages = with pkgs; [
       kdePackages.kdenlive
       btop
-      anki-bin
       songrec
       neofetch
       telegram-desktop
@@ -341,8 +344,6 @@
     syntaxHighlighting.enable = true;
     shellAliases = {
       ll = "ls -l";
-      eturbo = "echo 0 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
-      dturbo = "echo 1 | sudo tee /sys/devices/system/cpu/intel_pstate/no_turbo";
     };
     histSize = 2000;
   };
