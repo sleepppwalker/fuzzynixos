@@ -11,11 +11,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Kernel Parameters
-  boot.kernelParams = [
-    "i915.enable_psr=0"
-    "i915.enable_fbc=1"
-    "i915.enable_dc=1"
-  ];
+  boot.kernelParams = [];
 
   boot.extraModprobeConfig = ''
     options nvidia NVreg_UsePageAttributeTable=1
@@ -112,9 +108,7 @@
   };
 
   # System packages
-  environment.systemPackages = with pkgs; [
-
-  ];
+  environment.systemPackages = with pkgs; [];
 
   # Services
   systemd.services.systemd-timesyncd.enable = false;
@@ -198,6 +192,14 @@
     allowExternalGpu = false;
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:1:0:0";
+  };
+
+  # Intel gvt-g
+  virtualisation.kvmgt.enable = true;
+  virtualisation.kvmgt.vgpus = {
+    "i915-GVTg_V5_4" = {
+      uuid = [ "a297db4a-f4c2-11e6-90f6-d3b88d6c9525" ];
+    };
   };
 
   # Module other/other
@@ -318,6 +320,7 @@
   # Virtualization moduke
   # Enable libvirt and qemu
   # чому отключено runAsRoot? - копируем iso в tmp)))
+  programs.virt-manager.enable = true;
   virtualisation = {
     libvirtd = {
       enable = true;
@@ -333,7 +336,6 @@
       };
     };
   };
-  programs.virt-manager.enable = true;
 
   # Module shell
   # zsh and aliases
