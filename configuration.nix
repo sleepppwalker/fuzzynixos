@@ -21,11 +21,6 @@
   # CPU-tuning
   hardware.cpu.intel.updateMicrocode = true;
   services.thermald.enable = true;
-  services.undervolt = {
-    enable = true;
-    coreOffset = -110;
-    turbo = 1;
-  };
 
   # SSD
   services.fstrim = {
@@ -43,7 +38,7 @@
   services.clamav = {
     daemon.enable = true;
     updater = {
-      enable = false;
+      enable = true;
       frequency = 1;
     };
   };
@@ -194,14 +189,6 @@
     nvidiaBusId = "PCI:1:0:0";
   };
 
-  # Intel gvt-g
-  virtualisation.kvmgt.enable = true;
-  virtualisation.kvmgt.vgpus = {
-    "i915-GVTg_V5_4" = {
-      uuid = [ "a297db4a-f4c2-11e6-90f6-d3b88d6c9525" ];
-    };
-  };
-
   # Module other/other
   # Exclude manual HTML
   documentation.nixos.enable = false;
@@ -297,7 +284,7 @@
   users.users.kowasu = {
     isNormalUser = true;
     description = "kowasu";
-    extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" "libvirtd" ];
+    extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
     packages = with pkgs; [
       kdePackages.kdenlive
       btop
@@ -315,26 +302,6 @@
       v2rayn
       byedpi
     ];
-  };
-
-  # Virtualization moduke
-  # Enable libvirt and qemu
-  # чому отключено runAsRoot? - копируем iso в tmp)))
-  programs.virt-manager.enable = true;
-  virtualisation = {
-    libvirtd = {
-      enable = true;
-      onBoot = "ignore";
-      onShutdown = "shutdown";
-      qemu = {
-        package = pkgs.qemu_kvm;
-        runAsRoot = false;
-        swtpm.enable = true;
-        ovmf = {
-          enable = false;
-        };
-      };
-    };
   };
 
   # Module shell
