@@ -13,15 +13,6 @@
   # Kernel Parameters
   boot.kernelParams = [];
 
-  boot.extraModprobeConfig = ''
-    options nvidia NVreg_UsePageAttributeTable=1
-    options nvidia NVreg_RegistryDwords=RMIntrLockingMode=1
-  '';
-
-  # CPU-tuning
-  hardware.cpu.intel.updateMicrocode = true;
-  services.thermald.enable = true;
-
   # SSD
   services.fstrim = {
     enable = true;
@@ -36,9 +27,9 @@
 
   # ClamAV
   services.clamav = {
-    daemon.enable = true;
+    daemon.enable = false;
     updater = {
-      enable = true;
+      enable = false;
       frequency = 1;
     };
   };
@@ -52,10 +43,6 @@
 
   # Hostname
   networking.hostName = "mercury";
-
-  # Bluetooth
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -147,47 +134,11 @@
   programs.kdeconnect.enable = true;
 
   # Module environment
-  # Environment for performance
-  environment.variables = {
-    KWIN_DRM_DISABLE_TRIPLE_BUFFERING = "0";
-    __GL_YIELD = "USLEEP";
-  };
+  environment.variables = {};
 
   # Module graphics
   # Enable OpenGL
-  hardware.graphics = {
-    enable = true;
-    extraPackages = with pkgs; [
-      intel-media-sdk
-      intel-media-driver
-      intel-compute-runtime-legacy1
-      intel-vaapi-driver
-      libvdpau-va-gl
-    ];
-  };
-
-  # VAAPI
-  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; };
-
-  # Load nvidia driver for Xorg and Wayland
-  services.xserver.videoDrivers = ["nvidia"];
-
-  hardware.nvidia = {
-    modesetting.enable = true;
-    powerManagement.enable = false;
-    powerManagement.finegrained = true;
-    gsp.enable = true;
-    open = true;
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
-  };
-
-  hardware.nvidia.prime = {
-    reverseSync.enable = true;
-    allowExternalGpu = false;
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:1:0:0";
-  };
+  hardware.graphics.enable = true;
 
   # Module other/other
   # Exclude manual HTML
@@ -205,78 +156,6 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    extraConfig = {
-      pipewire-pulse."92-low-latency" = {
-        "context.properties" = [
-          {
-            name = "libpipewire-module-protocol-pulse";
-            args = { };
-          }
-        ];
-        "pulse.properties" = {
-          "pulse.min.req" = "1024/48000";
-          "pulse.default.req" = "1024/48000";
-          "pulse.max.req" = "1024/48000";
-          "pulse.min.quantum" = "1024/48000";
-          "pulse.max.quantum" = "1024/48000";
-        };
-        "stream.properties" = {
-          "node.latency" = "1024/48000";
-          "resample.quality" = 4;
-        };
-      };
-      pipewire."92-low-latency" = {
-        "context.properties" = {
-          "default.clock.rate" = "48000";
-          "default.clock.quantum" = "1024";
-          "default.clock.min-quantum" = "1024";
-          "default.clock.max-quantum" = "1024";
-        };
-        "context.modules" = [
-          {
-            name = "libpipewire-module-rt";
-            args = {
-              "nice.level" = "-20";
-              "rt.prio" = "99";
-              "rt.time.soft" = "99999";
-              "rt.time.hard" = "99999";
-            };
-          }
-        ];
-      };
-    };
-  };
-  security.pam.loginLimits = [
-    {
-      domain = "@audio";
-      item = "memlock";
-      type = "-";
-      value = "unlimited";
-    }
-    {
-      domain = "@audio";
-      item = "rtprio";
-      type = "-";
-      value = "99";
-    }
-    {
-      domain = "@audio";
-      item = "nofile";
-      type = "soft";
-      value = "99999";
-    }
-    {
-      domain = "@audio";
-      item = "nofile";
-      type = "hard";
-      value = "99999";
-    }
-  ];
-  services.udev = {
-    extraRules = ''
-      KERNEL=="rtc0", GROUP="audio"
-      KERNEL=="hpet", GROUP="audio"
-    '';
   };
 
   # Module user/kowasu
@@ -351,6 +230,7 @@
     };
     preferences = {
       "browser.uidensity" = 1;
+      "widget.use-xdg-desktop-portal.file-picker" = 1;
       "extensions.pocket.api" =  "";
       "extensions.pocket.enabled" = false;
       "extensions.pocket.site" = "";
