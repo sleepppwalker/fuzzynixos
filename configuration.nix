@@ -252,6 +252,7 @@
       "privacy.globalprivacycontrol.enabled" = true;
       "browser.send_pings" = false;
       "browser.crashReports.unsubmittedCheck.autoSubmit2" = false;
+      "media.peerconnection.enabled" = false;
     };
   };
 
