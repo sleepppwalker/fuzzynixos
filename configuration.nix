@@ -184,7 +184,6 @@
       heroic
       v2rayn
       byedpi
-      mangohud
     ];
   };
 
@@ -249,9 +248,6 @@
       "dom.ipc.plugins.reportCrashURL" = false;
       "dom.ipc.plugins.flash.subprocess.crashreporter.enabled" = false;
       "dom.security.https_only_mode" = true;
-      #"network.trr.mode" = 3;
-      #"network.trr.uri" = "https://mozilla.cloudflare-dns.com/dns-query";
-      #"network.trr.bootstrapAddress" = "1.1.1.1";
       "ui.key.menuAccessKeyFocuses" = false;
       "browser.contentblocking.category" = "strict";
       "privacy.globalprivacycontrol.enabled" = true;
