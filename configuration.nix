@@ -19,12 +19,6 @@
     interval = "weekly";
   };
 
-  # Kernel sysctl
-  boot.kernel.sysctl = {
-    "vm.max_map_count" = 2147483642;
-    "kernel.perf_cpu_time_max_percent" = 0;
-  };
-
   # ClamAV
   services.clamav = {
     daemon.enable = false;
@@ -105,10 +99,6 @@
   services = {
     xserver = {
       enable = false;
-      xkb = {
-        layout = "us,ru";
-        variant = "";
-      };
       excludePackages = [ pkgs.xterm ];
     };
     displayManager.sddm = {
@@ -119,9 +109,6 @@
     };
     desktopManager.plasma6 = {
       enable = true;
-    };
-    libinput = {
-      touchpad.disableWhileTyping = true;
     };
   };
   environment.plasma6.excludePackages = with pkgs.kdePackages; [
@@ -142,7 +129,10 @@
 
   # Module graphics
   # Enable OpenGL
-  hardware.graphics.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
 
   # Module other/other
   # Exclude manual HTML
@@ -162,11 +152,11 @@
     pulse.enable = true;
   };
 
-  # Module user/kowasu
+  # Module user/kowa
   # User
-  users.users.kowasu = {
+  users.users.kowa = {
     isNormalUser = true;
-    description = "kowasu";
+    description = "kowa";
     extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
     packages = with pkgs; [
       kdePackages.kdenlive
@@ -248,6 +238,9 @@
       "dom.ipc.plugins.reportCrashURL" = false;
       "dom.ipc.plugins.flash.subprocess.crashreporter.enabled" = false;
       "dom.security.https_only_mode" = true;
+      "network.trr.mode" = 3;
+      "network.trr.uri" = "https://mozilla.cloudflare-dns.com/dns-query";
+      "network.trr.bootstrapAddress" = "1.1.1.1";
       "ui.key.menuAccessKeyFocuses" = false;
       "browser.contentblocking.category" = "strict";
       "privacy.globalprivacycontrol.enabled" = true;
