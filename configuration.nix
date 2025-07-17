@@ -19,15 +19,6 @@
     interval = "weekly";
   };
 
-  # ClamAV
-  services.clamav = {
-    daemon.enable = false;
-    updater = {
-      enable = false;
-      frequency = 1;
-    };
-  };
-
   # zram
   zramSwap = {
     enable = true;
@@ -162,17 +153,16 @@
       kdePackages.kdenlive
       btop
       songrec
-      neofetch
+      fastfetch
       telegram-desktop
       libreoffice-qt6-fresh
       obs-studio
-      mpv
+      haruna
       vesktop
       easyeffects
       clamtk
       prismlauncher
       heroic
-      v2rayn
       byedpi
     ];
   };
