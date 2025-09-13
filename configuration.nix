@@ -39,7 +39,7 @@
   # Set your time zone.
   time.timeZone = "Asia/Chita";
 
-  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.defaultLocale = "ru_RU.UTF-8";
   i18n.supportedLocales = [
     "en_US.UTF-8/UTF-8"
     "ja_JP.UTF-8/UTF-8"
@@ -115,9 +115,6 @@
   # KDE Connect
   programs.kdeconnect.enable = true;
 
-  # Module environment
-  environment.variables = {};
-
   # Module graphics
   # Enable OpenGL
   hardware.graphics = {
@@ -143,14 +140,16 @@
     pulse.enable = true;
   };
 
-  # Module user/kowa
+  # Module user/qqqpppwww
   # User
-  users.users.kowa = {
+  users.users.qqqpppwww = {
     isNormalUser = true;
-    description = "kowa";
+    description = "qqqpppwww";
     extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
     packages = with pkgs; [
       kdePackages.kdenlive
+      moonlight-qt
+      ffmpeg-full
       btop
       songrec
       fastfetch
