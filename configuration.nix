@@ -9,9 +9,13 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Kernel Parameters
-  boot.kernelParams = [];
+  boot.kernelParams = [
+    "amdgpu.sg_display=0"
+    "amdgpu.aspm=0"
+  ];
 
   # SSD
   services.fstrim = {
@@ -30,7 +34,12 @@
   networking.hostName = "mercury";
 
   # Enable networking
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    plugins = with pkgs; [
+      networkmanager-openvpn
+    ];
+  };
 
   # Bluetooth
   hardware.bluetooth.enable = true;
@@ -70,7 +79,7 @@
     packages = with pkgs; [
       noto-fonts-cjk-serif
       noto-fonts-cjk-sans
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       nerdfetch
     ];
     fontconfig = {
@@ -79,7 +88,25 @@
   };
 
   # System packages
-  environment.systemPackages = with pkgs; [];
+  environment.systemPackages = with pkgs; [
+    git
+    ffmpeg-full
+    kdePackages.kdenlive
+    audacity
+    moonlight-qt
+    btop
+    songrec
+    fastfetch
+    telegram-desktop
+    libreoffice-qt6-fresh
+    obs-studio
+    haruna
+    vesktop
+    easyeffects
+    prismlauncher
+    heroic
+    byedpi
+  ];
 
   # Services
   systemd.services.systemd-timesyncd.enable = false;
@@ -107,11 +134,6 @@
     oxygen
   ];
 
-  # xdg-portals
-  xdg.portal = {
-   enable = true;
-  };
-
   # KDE Connect
   programs.kdeconnect.enable = true;
 
@@ -138,6 +160,11 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    wireplumber.extraConfig."11-bluetooth-policy" = {
+      "wireplumber.settings" = {
+        "bluetooth.autoswitch-to-headset-profile" = false;
+      };
+    };
   };
 
   # Module user/qqqpppwww
@@ -146,23 +173,7 @@
     isNormalUser = true;
     description = "qqqpppwww";
     extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
-    packages = with pkgs; [
-      kdePackages.kdenlive
-      moonlight-qt
-      ffmpeg-full
-      btop
-      songrec
-      fastfetch
-      telegram-desktop
-      libreoffice-qt6-fresh
-      obs-studio
-      haruna
-      vesktop
-      easyeffects
-      prismlauncher
-      heroic
-      byedpi
-    ];
+    packages = with pkgs; [];
   };
 
   # Module shell
@@ -184,19 +195,21 @@
 
   # Module apps/steam
   # Gaming
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = false;
-    dedicatedServer.openFirewall = false;
-    localNetworkGameTransfers.openFirewall = false;
-    package = pkgs.steam.override {
-      extraPkgs =
-      pkgs: with pkgs; [
-        kdePackages.breeze
-      ];
+  programs = {
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = false;
+      dedicatedServer.openFirewall = false;
+      localNetworkGameTransfers.openFirewall = false;
+      gamescopeSession.enable = true;
+      package = pkgs.steam.override {
+        extraPkgs =
+        pkgs: with pkgs; [
+          kdePackages.breeze
+        ];
+      };
     };
   };
-  programs.steam.gamescopeSession.enable = true;
   programs.gamemode.enable = true;
 
   # Module apps/firefox
