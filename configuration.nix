@@ -46,7 +46,7 @@
   hardware.bluetooth.powerOnBoot = true;
 
   # Set your time zone.
-  time.timeZone = "Asia/Chita";
+  time.timeZone = "Asia/Tokyo";
 
   i18n.defaultLocale = "ru_RU.UTF-8";
   i18n.supportedLocales = [
