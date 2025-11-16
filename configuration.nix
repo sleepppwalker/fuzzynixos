@@ -98,7 +98,7 @@
     songrec
     fastfetch
     telegram-desktop
-    libreoffice-qt6-fresh
+    libreoffice-qt-fresh
     obs-studio
     haruna
     vesktop
