@@ -1,11 +1,12 @@
 # Fetch!
-![Screenshot2.png](./Screenshots/Screenshot2.png)
+![FetchScreenshot.png](./Screenshots/FetchScreenshot.png)
 
 # Desktop screen!
-![Screenshot1.png](./Screenshots/Screenshot3.png)
+![DesktopScreenshot.png](./Screenshots/DesktopScreenshot.png)
 
-# Accent color 
+# Favorites accent color's
 #88c0d0
+#a0d6b5
 
 # Link to wallpapers
 [Wallpapers Project](https://github.com/kowareru/wallpapers)
