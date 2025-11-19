@@ -139,9 +139,11 @@
 
   # Module graphics
   # Enable OpenGL
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
   };
 
   # Module other/other
