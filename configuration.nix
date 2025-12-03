@@ -23,10 +23,17 @@
     interval = "weekly";
   };
 
+  # Scheduler
+  services.scx = {
+    enable = true;
+    scheduler = "scx_lavd";
+    extraArgs = [ "--performance" ];
+  };
+
   # zram
   zramSwap = {
     enable = true;
-    algorithm = "zstd";
+    algorithm = "lz4";
     memoryPercent = 25;
   };
 
@@ -90,6 +97,9 @@
   # System packages
   environment.systemPackages = with pkgs; [
     git
+    spotify
+    qbittorrent
+    obsidian
     ffmpeg-full
     kdePackages.kdenlive
     audacity
