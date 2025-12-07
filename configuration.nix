@@ -37,15 +37,16 @@
     memoryPercent = 25;
   };
 
-  # Hostname
-  networking.hostName = "mercury";
-
-  # Enable networking
-  networking.networkmanager = {
-    enable = true;
-    plugins = with pkgs; [
-      networkmanager-openvpn
-    ];
+  # Enable networking, hostname, nftables
+  networking = {
+    hostName = "mercury";
+    nftables.enable = true;
+    networkmanager = {
+      enable = true;
+      plugins = with pkgs; [
+        networkmanager-openvpn
+      ];
+    };
   };
 
   # Bluetooth
@@ -97,8 +98,12 @@
   # System packages
   environment.systemPackages = with pkgs; [
     git
+    yt-dlp
+    gimp
     spotify
     qbittorrent
+    mangohud
+    goverlay
     obsidian
     ffmpeg-full
     kdePackages.kdenlive
@@ -121,6 +126,12 @@
   # Services
   systemd.services.systemd-timesyncd.enable = false;
   systemd.services.ModemManager.enable = false;
+
+  # Android
+  # Waydroid
+  virtualisation.waydroid.enable = true;
+  # ADB
+  programs.adb.enable = true;
 
   # Module plasma
   # SDDM and Plasma6
