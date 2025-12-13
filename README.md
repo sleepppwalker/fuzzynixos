@@ -13,4 +13,4 @@ For Fcitx5 to work properly under Wayland, you need to select the **Fcitx5 Wayla
 ![Fcitx5.png](./Screenshots/Fcitx5.png)
 
 # Link to wallpapers
-[Wallpapers Project](https://github.com/kowareru/wallpapers)
+[Wallpapers Project](https://github.com/sleepppwalker/wallpapers)
