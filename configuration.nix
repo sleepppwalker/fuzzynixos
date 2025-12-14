@@ -69,6 +69,7 @@
           fcitx5-mozc
           fcitx5-gtk
         ];
+        ignoreUserConfig = true;
         settings = {
           inputMethod = {
             "Groups/0" = {
