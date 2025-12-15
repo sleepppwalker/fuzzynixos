@@ -7,27 +7,16 @@
     ];
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  # Kernel Parameters
-  boot.kernelParams = [
-    "amdgpu.sg_display=0"
-    "amdgpu.aspm=0"
-  ];
-
-  # SSD
-  services.fstrim = {
-    enable = true;
-    interval = "weekly";
-  };
-
-  # Scheduler
-  services.scx = {
-    enable = true;
-    scheduler = "scx_lavd";
-    extraArgs = [ "--performance" ];
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    kernelPackages = pkgs.linuxPackages_latest;
+    kernelParams = [
+      "amdgpu.sg_display=0"
+      "amdgpu.aspm=0"
+    ];
   };
 
   # zram
@@ -40,7 +29,9 @@
   # Enable networking, hostname, nftables
   networking = {
     hostName = "mercury";
-    nftables.enable = true;
+    nftables = {
+      enable = true;
+    };
     networkmanager = {
       enable = true;
       plugins = with pkgs; [
@@ -49,13 +40,10 @@
     };
   };
 
-  # Bluetooth
-  hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
-
   # Set your time zone.
   time.timeZone = "Asia/Tokyo";
 
+  # Keymap for console
   console = {
     keyMap = "en";
   };
@@ -120,130 +108,52 @@
   };
 
   # System packages
-  environment.systemPackages = with pkgs; [
-    git
-    yt-dlp
-    freetube
-    gimp
-    spotify
-    qbittorrent
-    mangohud
-    goverlay
-    obsidian
-    ffmpeg-full
-    kdePackages.kdenlive
-    audacity
-    moonlight-qt
-    btop
-    songrec
-    fastfetch
-    telegram-desktop
-    libreoffice-qt-fresh
-    obs-studio
-    haruna
-    vesktop
-    easyeffects
-    prismlauncher
-    heroic
-    byedpi
-  ];
-
-  # Services
-  systemd.services.systemd-timesyncd.enable = false;
-  systemd.services.ModemManager.enable = false;
-
-  # Android
-  # Waydroid
-  virtualisation.waydroid.enable = true;
-  # ADB
-  programs.adb.enable = true;
-
-  # Module plasma
-  # SDDM and Plasma6
-  services = {
-    xserver = {
-      enable = false;
-      excludePackages = [ pkgs.xterm ];
-    };
-    displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-      enableHidpi = true;
-      autoNumlock = true;
-    };
-    desktopManager.plasma6 = {
-      enable = true;
-    };
-  };
-  environment.plasma6.excludePackages = with pkgs.kdePackages; [
-    plasma-browser-integration
-    oxygen
-  ];
-
-  # KDE Connect
-  programs.kdeconnect.enable = true;
-
-  # Module graphics
-  # Enable OpenGL
-  hardware = {
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
+  environment = {
+    systemPackages = with pkgs; [
+      git
+      yt-dlp
+      freetube
+      gimp
+      spotify
+      qbittorrent
+      mangohud
+      goverlay
+      obsidian
+      ffmpeg-full
+      kdePackages.kdenlive
+      audacity
+      moonlight-qt
+      btop
+      songrec
+      fastfetch
+      telegram-desktop
+      libreoffice-qt-fresh
+      obs-studio
+      haruna
+      vesktop
+      easyeffects
+      prismlauncher
+      heroic
+      byedpi
+    ];
+    plasma6.excludePackages = with pkgs.kdePackages; [
+      plasma-browser-integration
+      oxygen
+    ];
   };
 
-  # Module other/other
-  # Exclude manual HTML
-  documentation.nixos.enable = false;
-
-  # Enable CUPS to print documents.
-  services.printing.enable = false;
-
-  # Module sound
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.extraConfig."11-bluetooth-policy" = {
-      "wireplumber.settings" = {
-        "bluetooth.autoswitch-to-headset-profile" = false;
-      };
-    };
+  # Waydroid & virtualisation
+  virtualisation = {
+    waydroid.enable = true;
   };
 
-  # Module user/qqqpppwww
-  # User
-  users.users.qqqpppwww = {
-    isNormalUser = true;
-    description = "qqqpppwww";
-    extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
-    packages = with pkgs; [];
-  };
-
-  # Module shell
-  # zsh and aliases
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-    shellAliases = {
-      ll = "ls -l";
-    };
-    histSize = 2000;
-  };
-  # disable message
-  system.userActivationScripts.zshrc = "touch .zshrc";
-  # set as default shell
-  users.defaultUserShell = pkgs.zsh;
-
-  # Module apps/steam
-  # Gaming
+  # Programs
   programs = {
+    # kdeconnect
+    kdeconnect.enable = true;
+    # Android
+    adb.enable = true;
+    # Steam
     steam = {
       enable = true;
       remotePlay.openFirewall = false;
@@ -257,44 +167,142 @@
         ];
       };
     };
+    # Gamemode
+    gamemode = {
+      enable = true;
+    };
+    # zsh
+    zsh = {
+      enable = true;
+      enableCompletion = true;
+      autosuggestions.enable = true;
+      syntaxHighlighting.enable = true;
+      shellAliases = {
+        ll = "ls -l";
+      };
+      histSize = 2000;
+    };
+    # Browser
+    firefox = {
+      enable = true;
+      languagePacks = [ "ru" ];
+      policies = {
+        DisableTelemetry = true;
+        DisableFirefoxStudies = true;
+        DisablePocket = true;
+        DisableFeedbackCommands = true;
+      };
+      preferences = {
+        "browser.uidensity" = 1;
+        "widget.use-xdg-desktop-portal.file-picker" = 1;
+        "extensions.pocket.api" =  "";
+        "extensions.pocket.enabled" = false;
+        "extensions.pocket.site" = "";
+        "extensions.pocket.oAuthConsumerKey" = "";
+        "datareporting.policy.dataSubmissionEnabled" = false;
+        "datareporting.policy.firstRunURL" = "";
+        "browser.tabs.crashReporting.sendReport" = false;
+        "browser.tabs.crashReporting.email" = false;
+        "browser.tabs.crashReporting.emailMe" = false;
+        "network.allow-experiments" = false;
+        "dom.ipc.plugins.reportCrashURL" = false;
+        "dom.ipc.plugins.flash.subprocess.crashreporter.enabled" = false;
+        "dom.security.https_only_mode" = true;
+        "ui.key.menuAccessKeyFocuses" = false;
+        "browser.contentblocking.category" = "strict";
+        "privacy.globalprivacycontrol.enabled" = true;
+        "browser.send_pings" = false;
+        "browser.crashReports.unsubmittedCheck.autoSubmit2" = false;
+        "media.peerconnection.enabled" = false;
+      };
+    };
   };
-  programs.gamemode.enable = true;
 
-  # Module apps/firefox
-  # Install firefox
-  programs.firefox = {
-    enable = true;
-    languagePacks = [ "ru" ];
-    policies = {
-      DisableTelemetry = true;
-      DisableFirefoxStudies = true;
-      DisablePocket = true;
-      DisableFeedbackCommands = true;
+  # Module hardware
+  hardware = {
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
     };
-    preferences = {
-      "browser.uidensity" = 1;
-      "widget.use-xdg-desktop-portal.file-picker" = 1;
-      "extensions.pocket.api" =  "";
-      "extensions.pocket.enabled" = false;
-      "extensions.pocket.site" = "";
-      "extensions.pocket.oAuthConsumerKey" = "";
-      "datareporting.policy.dataSubmissionEnabled" = false;
-      "datareporting.policy.firstRunURL" = "";
-      "browser.tabs.crashReporting.sendReport" = false;
-      "browser.tabs.crashReporting.email" = false;
-      "browser.tabs.crashReporting.emailMe" = false;
-      "network.allow-experiments" = false;
-      "dom.ipc.plugins.reportCrashURL" = false;
-      "dom.ipc.plugins.flash.subprocess.crashreporter.enabled" = false;
-      "dom.security.https_only_mode" = true;
-      "ui.key.menuAccessKeyFocuses" = false;
-      "browser.contentblocking.category" = "strict";
-      "privacy.globalprivacycontrol.enabled" = true;
-      "browser.send_pings" = false;
-      "browser.crashReports.unsubmittedCheck.autoSubmit2" = false;
-      "media.peerconnection.enabled" = false;
+    graphics = {
+      enable = true;
+      enable32Bit = true;
     };
   };
+
+  # Exclude manual HTML
+  documentation.nixos.enable = false;
+
+  # CUPS, Plasma & other services
+  services = {
+    # xorg, wayland, ssdm, plasma
+    xserver = {
+      enable = false;
+      excludePackages = [ pkgs.xterm ];
+    };
+    displayManager.sddm = {
+      enable = true;
+      wayland.enable = true;
+      enableHidpi = true;
+      autoNumlock = true;
+    };
+    desktopManager.plasma6 = {
+      enable = true;
+    };
+    # CUPS
+    printing = {
+      enable = false;
+    };
+    # SSD
+    fstrim = {
+      enable = true;
+      interval = "weekly";
+    };
+    # Sound
+    pulseaudio.enable = false;
+    pipewire = {
+      enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      pulse.enable = true;
+      wireplumber.extraConfig."11-bluetooth-policy" = {
+        "wireplumber.settings" = {
+          "bluetooth.autoswitch-to-headset-profile" = false;
+        };
+      };
+    };
+    # CPU Scheduler
+    scx = {
+      enable = true;
+      scheduler = "scx_lavd";
+      extraArgs = [ "--performance" ];
+    };
+  };
+  systemd = {
+    services = {
+      systemd-timesyncd.enable = false;
+      ModemManager.enable = false;
+    };
+  };
+
+  # Module security
+  security.rtkit.enable = true;
+
+  # Module User
+  users = {
+    defaultUserShell = pkgs.zsh;
+    users.qqqpppwww = {
+      isNormalUser = true;
+      description = "qqqpppwww";
+      extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
+      packages = with pkgs; [];
+    };
+  };
+
+  # disable message in zsh
+  system.userActivationScripts.zshrc = "touch .zshrc";
 
   # Don't touch !!!
   system.stateVersion = "25.05";
