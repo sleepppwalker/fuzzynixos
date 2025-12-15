@@ -29,9 +29,7 @@
   # Enable networking, hostname, nftables
   networking = {
     hostName = "mercury";
-    nftables = {
-      enable = true;
-    };
+    nftables.enable = true;
     networkmanager = {
       enable = true;
       plugins = with pkgs; [
@@ -246,9 +244,7 @@
       enableHidpi = true;
       autoNumlock = true;
     };
-    desktopManager.plasma6 = {
-      enable = true;
-    };
+    desktopManager.plasma6.enable = true;
     # CUPS
     printing = {
       enable = false;
@@ -288,7 +284,9 @@
   };
 
   # Module security
-  security.rtkit.enable = true;
+  security = {
+    rtkit.enable = true;
+  };
 
   # Module User
   users = {
