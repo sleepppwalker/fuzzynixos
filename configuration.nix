@@ -6,7 +6,7 @@
       ./hardware-configuration.nix
     ];
 
-  # Bootloader.
+  # Bootloader
   boot = {
     loader = {
       systemd-boot.enable = true;
@@ -19,7 +19,7 @@
     ];
   };
 
-  # zram
+  # Zram
   zramSwap = {
     enable = true;
     algorithm = "lz4";
@@ -38,7 +38,7 @@
     };
   };
 
-  # Set your time zone.
+  # Time zone
   time.timeZone = "Asia/Tokyo";
 
   # Keymap for console
@@ -46,6 +46,7 @@
     keyMap = "en";
   };
 
+  # Input method, fcitx5
   i18n = {
     inputMethod = {
       enable = true;
@@ -89,7 +90,7 @@
     ];
   };
 
-  # Unfree
+  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
   # Fonts
@@ -109,6 +110,7 @@
   environment = {
     systemPackages = with pkgs; [
       git
+      wget
       yt-dlp
       freetube
       gimp
@@ -291,15 +293,17 @@
   # Module User
   users = {
     defaultUserShell = pkgs.zsh;
-    users.qqqpppwww = {
-      isNormalUser = true;
-      description = "qqqpppwww";
-      extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
-      packages = with pkgs; [];
+    users = {
+      qqqpppwww = {
+        isNormalUser = true;
+        description = "qqqpppwww";
+        extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
+        packages = with pkgs; [];
+      };
     };
   };
 
-  # disable message in zsh
+  # Disable message in zsh
   system.userActivationScripts.zshrc = "touch .zshrc";
 
   # Don't touch !!!
