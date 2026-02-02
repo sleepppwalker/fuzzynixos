@@ -59,6 +59,11 @@
         waylandFrontend = true;
         ignoreUserConfig = true;
         settings = {
+          globalOptions = {
+            "Hotkey/TriggerKeys" = {
+              "0" = "Control+space";
+            };
+          };
           inputMethod = {
             "Groups/0" = {
               Name = "Default";
@@ -68,6 +73,7 @@
             "Groups/0/Items/0".Name = "keyboard-us";
             "Groups/0/Items/1".Name = "keyboard-ru";
             "Groups/0/Items/2".Name = "mozc";
+            GroupOrder."0" = "Default";
           };
         };
       };
@@ -113,6 +119,7 @@
       git
       wget
       yt-dlp
+      pkgs.anki
       gimp
       spotify
       qbittorrent
