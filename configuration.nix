@@ -56,6 +56,7 @@
           fcitx5-mozc
           fcitx5-gtk
         ];
+        waylandFrontend = true;
         ignoreUserConfig = true;
         settings = {
           inputMethod = {
@@ -72,17 +73,17 @@
       };
     };
     extraLocaleSettings = {
-      LC_ADDRESS = "ru_RU.UTF-8";
-      LC_IDENTIFICATION = "ru_RU.UTF-8";
-      LC_MEASUREMENT = "ru_RU.UTF-8";
-      LC_MONETARY = "ru_RU.UTF-8";
-      LC_NAME = "ru_RU.UTF-8";
-      LC_NUMERIC = "ru_RU.UTF-8";
-      LC_PAPER = "ru_RU.UTF-8";
-      LC_TELEPHONE = "ru_RU.UTF-8";
-      LC_TIME = "ru_RU.UTF-8";
+      LC_ADDRESS = "en_US.UTF-8";
+      LC_IDENTIFICATION = "en_US.UTF-8";
+      LC_MEASUREMENT = "en_US.UTF-8";
+      LC_MONETARY = "en_US.UTF-8";
+      LC_NAME = "en_US.UTF-8";
+      LC_NUMERIC = "en_US.UTF-8";
+      LC_PAPER = "en_US.UTF-8";
+      LC_TELEPHONE = "en_US.UTF-8";
+      LC_TIME = "en_US.UTF-8";
     };
-    defaultLocale = "ru_RU.UTF-8";
+    defaultLocale = "en_US.UTF-8";
     supportedLocales = [
       "en_US.UTF-8/UTF-8"
       "ja_JP.UTF-8/UTF-8"
@@ -112,13 +113,10 @@
       git
       wget
       yt-dlp
-      freetube
       gimp
       spotify
       qbittorrent
-      mangohud
-      goverlay
-      obsidian
+      krita
       ffmpeg-full
       kdePackages.kdenlive
       audacity
@@ -235,7 +233,7 @@
 
   # CUPS, Plasma & other services
   services = {
-    # xorg, wayland, ssdm, plasma
+    # xorg, wayland, sddm, plasma
     xserver = {
       enable = false;
       excludePackages = [ pkgs.xterm ];
@@ -309,3 +307,4 @@
   # Don't touch !!!
   system.stateVersion = "25.11";
 }
+
