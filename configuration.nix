@@ -307,5 +307,5 @@
   system.userActivationScripts.zshrc = "touch .zshrc";
 
   # Don't touch !!!
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }
