@@ -126,6 +126,7 @@
       krita
       ffmpeg-full
       kdePackages.kdenlive
+      gnome-solanum
       audacity
       moonlight-qt
       btop
@@ -233,6 +234,8 @@
       enable = true;
       enable32Bit = true;
     };
+    # ddc/ci
+    i2c.enable = true;
   };
 
   # Exclude manual HTML
@@ -302,7 +305,7 @@
       qqqpppwww = {
         isNormalUser = true;
         description = "qqqpppwww";
-        extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" ];
+        extraGroups = [ "networkmanager" "wheel" "gamemode" "audio" "i2c" ];
         packages = with pkgs; [];
       };
     };
