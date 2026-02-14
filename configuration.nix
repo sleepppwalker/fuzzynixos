@@ -13,10 +13,6 @@
       efi.canTouchEfiVariables = true;
     };
     kernelPackages = pkgs.linuxPackages_latest;
-    kernelParams = [
-      "amdgpu.sg_display=0"
-      "amdgpu.aspm=0"
-    ];
   };
 
   # Zram
@@ -79,15 +75,15 @@
       };
     };
     extraLocaleSettings = {
-      LC_ADDRESS = "en_US.UTF-8";
-      LC_IDENTIFICATION = "en_US.UTF-8";
-      LC_MEASUREMENT = "en_US.UTF-8";
-      LC_MONETARY = "en_US.UTF-8";
-      LC_NAME = "en_US.UTF-8";
-      LC_NUMERIC = "en_US.UTF-8";
-      LC_PAPER = "en_US.UTF-8";
-      LC_TELEPHONE = "en_US.UTF-8";
-      LC_TIME = "en_US.UTF-8";
+      LC_ADDRESS = "ru_RU.UTF-8";
+      LC_IDENTIFICATION = "ru_RU.UTF-8";
+      LC_MEASUREMENT = "ru_RU.UTF-8";
+      LC_MONETARY = "ru_RU.UTF-8";
+      LC_NAME = "ru_RU.UTF-8";
+      LC_NUMERIC = "ru_RU.UTF-8";
+      LC_PAPER = "ru_RU.UTF-8";
+      LC_TELEPHONE = "ru_RU.UTF-8";
+      LC_TIME = "ru_RU.UTF-8";
     };
     defaultLocale = "en_US.UTF-8";
     supportedLocales = [
@@ -118,7 +114,9 @@
     systemPackages = with pkgs; [
       git
       wget
+      obsidian
       yt-dlp
+      ptyxis
       pkgs.anki
       gimp
       spotify
@@ -126,7 +124,6 @@
       krita
       ffmpeg-full
       kdePackages.kdenlive
-      gnome-solanum
       audacity
       moonlight-qt
       btop
@@ -144,6 +141,7 @@
     ];
     plasma6.excludePackages = with pkgs.kdePackages; [
       plasma-browser-integration
+      konsole
       oxygen
     ];
   };
